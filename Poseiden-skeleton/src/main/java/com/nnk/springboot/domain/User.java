@@ -1,6 +1,7 @@
 package com.nnk.springboot.domain;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
 @Entity
@@ -9,12 +10,17 @@ public class User {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
+
     @NotBlank(message = "Username is mandatory")
     private String username;
+
+    @Min(value = 8, message = "Password must have minimum 8 characters")
     @NotBlank(message = "Password is mandatory")
     private String password;
+
     @NotBlank(message = "FullName is mandatory")
     private String fullname;
+
     @NotBlank(message = "Role is mandatory")
     private String role;
 
