@@ -79,6 +79,9 @@ public class Trade {
 
 	private String side;
 
+	public Trade(String trade_account, String type, double v) {
+	}
+
 	public Trade(String trade_account, String type) {
 	}
 }

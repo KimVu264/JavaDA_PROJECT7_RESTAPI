@@ -2,6 +2,7 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.services.RuleNameService;
+import com.nnk.springboot.validator.RuleNameValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +22,18 @@ public class RuleNameController {
     private static final Logger logger = LogManager.getLogger("RuleNameController");
 
     @Autowired
-    RuleNameService service;
+    RuleNameService ruleNameService;
+
+    @Autowired
+    RuleNameValidator validator;
 
     @RequestMapping("/ruleName/list")
     public String home(Model model) {
         try {
-            model.addAttribute("ruleNames", service.findAll());
+            model.addAttribute("ruleNames", ruleNameService.findAll());
             return "ruleName/list";
         } catch (Exception ex) {
-            logger.error("Log error: " + ex.getMessage());
+            logger.info("Log error: " + ex.getMessage());
         }
         return "ruleName/list";
     }
@@ -46,26 +50,30 @@ public class RuleNameController {
 
     @PostMapping("/ruleName/validate")
     public String validate(@Valid RuleName ruleName, BindingResult result, Model model) {
+        try {
+            //validate
+            validator.validate(ruleName, result);
 
-        if (!result.hasErrors()) {
-            service.save(ruleName);
-            model.addAttribute("ruleNames", service.findAll());
-            return "redirect:/ruleName/list";
-        }
-        else {
-            logger.error("Log error: Rule name is not valid ");
+            if (!result.hasErrors()) {
+                ruleNameService.save(ruleName);
+                model.addAttribute("ruleNames", ruleNameService.findAll());
+                return "redirect:/ruleName/list";
+            }
             return "ruleName/add";
+        } catch (Exception ex) {
+            logger.info("Log error: " + ex.getMessage());
         }
+        return "ruleName/add";
     }
 
     @GetMapping("/ruleName/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         try {
-            RuleName ruleName = service.findById(id);
+            RuleName ruleName = ruleNameService.findById(id);
             model.addAttribute("ruleName", ruleName);
             return "ruleName/update";
         } catch (Exception ex) {
-            logger.error("Log error: " + ex.getMessage());
+            logger.info("Log error: " + ex.getMessage());
         }
         return "ruleName/update";
     }
@@ -73,12 +81,19 @@ public class RuleNameController {
     @PostMapping("/ruleName/update/{id}")
     public String updateRuleName(@PathVariable("id") Integer id, @Valid RuleName ruleName,
                                  BindingResult result, Model model) {
-        if (result.hasErrors()) {
+        try {
+            //validate
+            validator.validate(ruleName, result);
+
+            if (result.hasErrors()) {
+                return "ruleName/update";
+            }
             ruleName.setId(id);
-            service.save(ruleName);
-            model.addAttribute("ruleNames", service.findAll());
-        } else {
-            logger.error("Log error: id is not valid");
+            ruleNameService.save(ruleName);
+            model.addAttribute("ruleNames", ruleNameService.findAll());
+            return "redirect:/ruleName/list";
+        } catch (Exception ex) {
+            logger.info("Log error: " + ex.getMessage());
         }
         return "redirect:/ruleName/list";
     }
@@ -86,9 +101,9 @@ public class RuleNameController {
     @GetMapping("/ruleName/delete/{id}")
     public String deleteRuleName(@PathVariable("id") Integer id, Model model) {
         try {
-            RuleName ruleName = service.findById(id);
-            service.delete(ruleName);
-            model.addAttribute("ruleNames", service.findAll());
+            RuleName ruleName = ruleNameService.findById(id);
+            ruleNameService.delete(ruleName);
+            model.addAttribute("ruleNames", ruleNameService.findAll());
             return "redirect:/ruleName/list";
         } catch (Exception ex) {
             logger.info("Log error: " + ex.getMessage());

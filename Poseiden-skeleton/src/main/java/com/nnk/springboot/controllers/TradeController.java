@@ -2,6 +2,7 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.services.TradeService;
+import com.nnk.springboot.validator.TradeValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +24,16 @@ public class TradeController {
     @Autowired
     private TradeService tradeService;
 
+    @Autowired
+    TradeValidator validator;
+
     @RequestMapping("/trade/list")
     public String home(Model model) {
         try {
             model.addAttribute("trades", tradeService.findAll());
             return "trade/list";
         } catch (Exception ex) {
-            logger.error("Log error: " + ex.getMessage());
+            logger.info("Log error: " + ex.getMessage());
         }
         return "trade/list";
     }
@@ -46,17 +50,20 @@ public class TradeController {
 
     @PostMapping("/trade/validate")
     public String validate(@Valid Trade trade, BindingResult result, Model model) {
-
-        if (!result.hasErrors()) {
-            //checkData
-            tradeService.save(trade);
-            model.addAttribute("trades", tradeService.findAll());
-            return "redirect:/trade/list";
-        }
-        else {
-            logger.error("Log error: trade is not valid ");
+        try {
+            // Validation
+            validator.validate(trade, result);
+            if (!result.hasErrors()) {
+                //checkData
+                tradeService.save(trade);
+                model.addAttribute("trades", tradeService.findAll());
+                return "redirect:/trade/list";
+            }
             return "trade/add";
+        } catch (Exception ex) {
+            logger.info("Log error: " + ex.getMessage());
         }
+        return "trade/add";
     }
 
     @GetMapping("/trade/update/{id}")
@@ -74,13 +81,20 @@ public class TradeController {
     @PostMapping("/trade/update/{id}")
     public String updateTrade(@PathVariable("id") Integer id, @Valid Trade trade,
                               BindingResult result, Model model) {
-        if (result.hasErrors()) {
+        try {
+            // Validation
+            validator.validate(trade, result);
+
+            if (result.hasErrors()) {
+                return "trade/update";
+            }
             trade.setTradeId(id);
             tradeService.save(trade);
             model.addAttribute("trades", tradeService.findAll());
-        }
-        else {
-            logger.error("Log error: id is not valid ");
+
+            return "redirect:/trade/list";
+        } catch (Exception ex) {
+            logger.info("Log error: " + ex.getMessage());
         }
         return "redirect:/trade/list";
     }
@@ -93,7 +107,7 @@ public class TradeController {
             model.addAttribute("trades", tradeService.findAll());
             return "redirect:/trade/list";
         } catch (Exception ex) {
-            logger.error("Log error: " + ex.getMessage());
+            logger.info("Log error: " + ex.getMessage());
         }
         return "redirect:/trade/list";
     }

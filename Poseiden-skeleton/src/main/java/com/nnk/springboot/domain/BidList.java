@@ -1,9 +1,6 @@
 package com.nnk.springboot.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.lang.NonNull;
 
@@ -19,12 +16,13 @@ import java.sql.Timestamp;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "bid_list")
 public class BidList {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private Integer BidListId;
+    private Integer bidListId;
 
 	@NonNull
 	@NotBlank(message = "Account is mandatory")

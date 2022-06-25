@@ -1,5 +1,6 @@
 package com.nnk.springboot.config;
 
+import com.nnk.springboot.domain.Provider;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.repositories.UserRepository;
 import org.apache.logging.log4j.LogManager;
@@ -15,7 +16,7 @@ import java.util.Collections;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-	private static final Logger logger = LogManager.getLogger("UserDetailServiceImplLog");
+	private static final Logger logger = LogManager.getLogger("UserDetailServiceImpl");
 
 	private final UserRepository userRepository;
 
@@ -24,12 +25,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-		User appUser = this.userRepository.findByUserName(userName);
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		User appUser = this.userRepository.findByUsername(username);
 
 		if (appUser == null) {
-			logger.info("User not found! " + userName);
-			throw new UsernameNotFoundException("User " + userName + " was not found in the database");
+			logger.info("User not found! " + username);
+			throw new UsernameNotFoundException("User " + username + " was not found in the database");
 		}
 
 		logger.info("Found User: " + appUser);
@@ -38,5 +39,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 				appUser.getUsername(),
 				appUser.getPassword(),
 				Collections.singletonList(new SimpleGrantedAuthority(appUser.getRole())));
+	}
+
+	public void processOAuthPostLogin(String username) {
+		User existUser = userRepository.findByUsername(username);
+
+		if (existUser == null) {
+			User newUser = new User();
+			newUser.setUsername(username);
+			newUser.setProvider(Provider.GOOGLE);
+			newUser.setRole("USER");
+			//newUser.setEnabled(true);
+
+			userRepository.save(newUser);
+		}
+
 	}
 }

@@ -2,6 +2,7 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.services.CurvePointService;
+import com.nnk.springboot.validator.CurvePointValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class CurveController {
 
     @Autowired
     CurvePointService curvePointService;
+
+    @Autowired
+    CurvePointValidator validator;
 
     @RequestMapping("/curvePoint/list")
     public String home(Model model) {
@@ -46,17 +50,21 @@ public class CurveController {
 
     @PostMapping("/curvePoint/validate")
     public String validate(@Valid CurvePoint curvePoint, BindingResult result, Model model) {
+        try {
+            //validate
+            validator.validate(curvePoint, result);
 
-        if (!result.hasErrors()) {
-            //checkData
-            curvePointService.save(curvePoint);
-            model.addAttribute("curvePoints", curvePointService.findAll());
-            return "redirect:/curvePoint/list";
-        }
-        else {
-            logger.error("Curve point is not valid");
+            if (!result.hasErrors()) {
+                //checkData
+                curvePointService.save(curvePoint);
+                model.addAttribute("curvePoints", curvePointService.findAll());
+                return "redirect:/curvePoint/list";
+            }
             return "curvePoint/add";
+        } catch (Exception ex) {
+            logger.info("Log error: " + ex.getMessage());
         }
+        return "curvePoint/add";
     }
 
     @GetMapping("/curvePoint/update/{id}")
@@ -74,18 +82,21 @@ public class CurveController {
     @PostMapping("/curvePoint/update/{id}")
     public String updateBid(@PathVariable("id") Integer id, @Valid CurvePoint curvePoint,
                             BindingResult result, Model model) {
-        if(!result.hasErrors())
-        {
-            //curvePoint.setId(id);
+        try {
+            //validate
+            validator.validate(curvePoint, result);
+
+            if (result.hasErrors()) {
+                return "curvePoint/update";
+            }
+            curvePoint.setId(id);
             curvePointService.save(curvePoint);
             model.addAttribute("curvePoints", curvePointService.findAll());
-            logger.info("Curve point is updated !");
             return "redirect:/curvePoint/list";
+        } catch (Exception ex) {
+            logger.info("Log error: " + ex.getMessage());
         }
-        else {
-            logger.error("Id is not exact, please check again !");
-            return "/curvePoint/update/{id}";
-        }
+        return "redirect:/curvePoint/list";
     }
 
     @GetMapping("/curvePoint/delete/{id}")
@@ -96,7 +107,7 @@ public class CurveController {
             model.addAttribute("curvePoints", curvePointService.findAll());
             return "redirect:/curvePoint/list";
         } catch (Exception ex) {
-            logger.error("Log error: " + ex.getMessage());
+            logger.info("Log error: " + ex.getMessage());
         }
         return "redirect:/curvePoint/list";
     }

@@ -1,13 +1,15 @@
 package com.nnk.springboot.domain;
 
+import org.springframework.lang.NonNull;
+
 import javax.persistence.*;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import java.security.Provider;
+import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
@@ -15,7 +17,8 @@ public class User {
     @NotBlank(message = "Username is mandatory")
     private String username;
 
-    @Min(value = 8, message = "Password must have minimum 8 characters")
+    @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", message = "Password is not valid")
+    @NonNull
     @NotBlank(message = "Password is mandatory")
     private String password;
 
@@ -24,6 +27,17 @@ public class User {
 
     @NotBlank(message = "Role is mandatory")
     private String role;
+
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
+
+    public Provider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(Provider provider) {
+        this.provider = provider;
+    }
 
     public Integer getId() {
         return id;
@@ -63,5 +77,8 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public void setEnabled(boolean b) {
     }
 }

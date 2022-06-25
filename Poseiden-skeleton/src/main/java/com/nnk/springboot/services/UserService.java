@@ -1,23 +1,26 @@
 package com.nnk.springboot.services;
 
+import com.nnk.springboot.domain.Provider;
 import com.nnk.springboot.domain.User;
-import com.nnk.springboot.exception.UserDoesNotExist;
-import com.nnk.springboot.exception.UserExisted;
 import com.nnk.springboot.repositories.UserRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.passay.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.validation.Errors;
+import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.regex.Pattern;
 
+@Service
 public class UserService {
 
-	private static final Logger logger = LogManager.getLogger("UserServiceLog");
+	private static final Logger logger = LogManager.getLogger("UserService");
 
 	private final UserRepository userRepository;
-	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+	@Autowired
+	private final BCryptPasswordEncoder bCryptPasswordEncoder ;
 
 	public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
 		this.userRepository = userRepository;
@@ -29,67 +32,44 @@ public class UserService {
 	 * @param user with the information for saving in database
 	 * @return a user who has not yet existed in database
 	 */
-	public User createUser(User user) throws UserExisted {
-		if (user.getUsername() != null)
-		{
-			if(isExistUserByUsername(user)) {
-				throw new UserExisted();
-			}
+	public User createUser(User user) {
 			User u = new User();
 			u.setUsername(user.getUsername());
 			u.setFullname(user.getFullname());
+			u.setProvider(Provider.LOCAL);
 			u.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-			u.setRole(user.getRole());
+			u.setRole("USER");
 			userRepository.save(u);
-
 			return u;
-		}
-		return null;
+
 	}
 
 	public boolean isExistUserByUsername( User u) {
-		User user = userRepository.findByUserName(u.getUsername());
+		User user = userRepository.findByUsername(u.getUsername());
 		if (user != null){
 			return true;
 		}
 		return false;
 	}
 
-	public User getUserByUsername(String username) throws UserDoesNotExist {
-		User user = userRepository.findByUserName(username);
-		if (user == null) {
-			throw new UserDoesNotExist();
-		}
+	public User getUserByUsername(String username)  {
+		User user = userRepository.findByUsername(username);
 		return user;
 	}
 
-	public void isValidPassword(String password, Errors errors) {
+	public Boolean isValidPassword(String password) {
+
 		logger.info("Check password if it is valid");
-		if(password.equals("")){
-			errors.rejectValue("password", "user.password.invalid.blank");
-		}
-		if (!Pattern.compile("[0-9]").matcher(password).find()) {
-			errors.rejectValue("password", "user.password.invalid.number");
-		}
 
-		if (!Pattern.compile("[a-z]").matcher(password).find()) {
-			errors.rejectValue("password", "user.password.invalid.lower");
-		}
+		PasswordValidator validator = new PasswordValidator(Arrays.asList(
+				new LengthRule(8, 16),
+				new CharacterRule(EnglishCharacterData.UpperCase, 1),
+				new CharacterRule(EnglishCharacterData.Digit, 1),
+				new CharacterRule(EnglishCharacterData.Special, 1)));
+		RuleResult ruleResult = validator.validate(new PasswordData(password));
 
-		if (!Pattern.compile("[A-Z]").matcher(password).find()) {
-			errors.rejectValue("password", "user.password.invalid.upper");
-		}
-
-		if (!Pattern.compile("[!@#&()–[{}]:;',?/*~$^+=<>]").matcher(password).find()) {
-			errors.rejectValue("password", "user.password.invalid.special");
-		}
-
-		if (password.contains(" ")) {
-			errors.rejectValue("password", "user.password.invalid.whitespace");
-		}
-
-		if (!"".equals("") && password.length() < 8) {
-			errors.rejectValue("password", "user.password.invalid.length");
-		}
+		logger.debug("Password result: {}", ruleResult.isValid());
+		return ruleResult.isValid();
 	}
+
 }
