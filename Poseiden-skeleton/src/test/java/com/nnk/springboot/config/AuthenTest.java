@@ -1,5 +1,6 @@
 package com.nnk.springboot.config;
 
+import lombok.experimental.UtilityClass;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -12,13 +13,14 @@ import org.springframework.security.test.context.support.WithSecurityContextFact
 import java.lang.annotation.*;
 import java.util.Collections;
 
+@UtilityClass
 public class AuthenTest {
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@WithSecurityContext(factory = WithMockCustomUserSecurityContextFactory.class)
 	public @interface WithMockCustomUser {
 		String username() default "kim";
-		String password() default "Kim123@";
+		String password() default "Kimtest123@";
 	}
 
 	public class WithMockCustomUserSecurityContextFactory
@@ -34,28 +36,4 @@ public class AuthenTest {
 			return context;
 		}
 	}
-
-/*
-	final class WithUserDetailsSecurityContextFactory
-			implements WithSecurityContextFactory<WithUserDetails> {
-
-		private UserDetailsService userDetailsService;
-
-		@Autowired
-		public WithUserDetailsSecurityContextFactory(UserDetailsService userDetailsService) {
-			this.userDetailsService = userDetailsService;
-		}
-
-		public SecurityContext createSecurityContext(WithUserDetails withUser) {
-			String username = withUser.value();
-			Assert.hasLength(username, "value() must be non-empty String");
-			UserDetails principal = userDetailsService.loadUserByUsername(username);
-			Authentication authentication = new UsernamePasswordAuthenticationToken(principal, principal.getPassword(), principal.getAuthorities());
-			SecurityContext context = SecurityContextHolder.createEmptyContext();
-			context.setAuthentication(authentication);
-			return context;
-		}
-	}
-
- */
 }

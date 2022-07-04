@@ -19,95 +19,86 @@ import javax.validation.Valid;
 @Controller
 public class RatingController {
 
-    private static final Logger logger = LogManager.getLogger("RatingController");
+	private static final Logger logger = LogManager.getLogger("RatingController");
 
-    @Autowired
-    RatingService ratingService;
+	@Autowired
+	RatingService ratingService;
 
-    @Autowired
-    RatingValidator validator;
+	@Autowired
+	RatingValidator validator;
 
-    @RequestMapping("/rating/list")
-    public String home(Model model) {
-        try {
-            model.addAttribute("ratings", ratingService.findAll());
-            return "rating/list";
-        } catch (Exception ex) {
-            logger.info("Log error: " + ex.getMessage());
-        }
-        return "rating/list";
-    }
+	@RequestMapping("/rating/list")
+	public String home(Model model) {
 
-    @GetMapping("/rating/add")
-    public String addRatingForm(Rating rating) {
-        try {
-            return "rating/add";
-        } catch (Exception ex) {
-            logger.info("Log error: " + ex.getMessage());
-        }
-        return "rating/add";
-    }
+		model.addAttribute("ratings", ratingService.findAll());
+		logger.info("Show rating list ");
+		return "rating/list";
+	}
 
-    @PostMapping("/rating/validate")
-    public String validate(@Valid Rating rating, BindingResult result, Model model) {
-        try {
-            //validate
-            validator.validate(rating, result);
+	@GetMapping("/rating/add")
+	public String addRatingForm(Rating rating) {
 
-            if (!result.hasErrors()) {
-                ratingService.save(rating);
-                model.addAttribute("ratings", ratingService.findAll());
-                return "redirect:/rating/list";
-            }
-            return "rating/add";
-        } catch (Exception ex) {
-            logger.info("Log error: " + ex.getMessage());
-        }
-        return "rating/add";
-    }
+		logger.info("Show rating form to add");
+		return "rating/add";
+	}
 
-    @GetMapping("/rating/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        try {
-            Rating rating = ratingService.findById(id);
-            model.addAttribute("rating", rating);
-            return "rating/update";
-        } catch (Exception ex) {
-            logger.info("Log error: " + ex.getMessage());
-        }
-        return "rating/update";
-    }
+	@PostMapping("/rating/validate")
+	public String validate(@Valid Rating rating, BindingResult result, Model model) {
 
-    @PostMapping("/rating/update/{id}")
-    public String updateRating(@PathVariable("id") Integer id, @Valid Rating rating,
-                               BindingResult result, Model model) {
-        try {
-            //validate
-            validator.validate(rating, result);
+		//validate
+		validator.validate(rating, result);
 
-            if (result.hasErrors()) {
-                return "rating/update";
-            }
-            rating.setId(id);
-            ratingService.save(rating);
-            model.addAttribute("ratings", ratingService.findAll());
-            return "redirect:/rating/list";
-        } catch (Exception ex) {
-            logger.info("Log error: " + ex.getMessage());
-        }
-        return "redirect:/rating/list";
-    }
+		if(!result.hasErrors())
+		{
+			ratingService.save(rating);
+			model.addAttribute("ratings", ratingService.findAll());
+			logger.info("Add new rating successfully !");
+			return "redirect:/rating/list";
+		}
+		else
+		{
+			logger.info("Error add new rating");
+			return "rating/add";
+		}
+	}
 
-    @GetMapping("/rating/delete/{id}")
-    public String deleteRating(@PathVariable("id") Integer id, Model model) {
-        try {
-            Rating rating = ratingService.findById(id);
-            ratingService.delete(rating);
-            model.addAttribute("ratings", ratingService.findAll());
-            return "redirect:/rating/list";
-        } catch (Exception ex) {
-            logger.info("Log error: " + ex.getMessage());
-        }
-        return "redirect:/rating/list";
-    }
+	@GetMapping("/rating/update/{id}")
+	public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
+
+		Rating rating = ratingService.findById(id);
+		model.addAttribute("rating", rating);
+		logger.info("Show form to update rating");
+		return "rating/update";
+	}
+
+	@PostMapping("/rating/update/{id}")
+	public String updateRating(@PathVariable("id") Integer id, @Valid Rating rating,
+	                           BindingResult result, Model model) {
+		//validate
+		validator.validate(rating, result);
+
+		if(!result.hasErrors())
+		{
+			rating.setId(id);
+			ratingService.save(rating);
+			model.addAttribute("ratings", ratingService.findAll());
+			logger.info("Rating is updated successfully !");
+			return "redirect:/rating/list";
+		}
+		else
+		{
+			logger.error("Error update bidList");
+			return "rating/update";
+		}
+	}
+
+	@GetMapping("/rating/delete/{id}")
+	public String deleteRating(@PathVariable("id") Integer id, Model model) {
+
+		Rating rating = ratingService.findById(id);
+		ratingService.delete(rating);
+		model.addAttribute("ratings", ratingService.findAll());
+		logger.info("Delete rating successfully !");
+		return "redirect:/rating/list";
+	}
 }

@@ -19,96 +19,86 @@ import javax.validation.Valid;
 @Controller
 public class CurveController {
 
-    private static final Logger logger = LogManager.getLogger("CurveController");
+	private static final Logger logger = LogManager.getLogger("CurveController");
 
-    @Autowired
-    CurvePointService curvePointService;
+	@Autowired
+	CurvePointService curvePointService;
 
-    @Autowired
-    CurvePointValidator validator;
+	@Autowired
+	CurvePointValidator validator;
 
-    @RequestMapping("/curvePoint/list")
-    public String home(Model model) {
-        try {
-            model.addAttribute("curvePoints", curvePointService.findAll());
-            return "curvePoint/list";
-        } catch (Exception ex) {
-            logger.info("Log error: " + ex.getMessage());
-        }
-        return "curvePoint/list";
-    }
+	@RequestMapping("/curvePoint/list")
+	public String home(Model model) {
 
-    @GetMapping("/curvePoint/add")
-    public String addBidForm(CurvePoint bid) {
-        try {
-            return "curvePoint/add";
-        } catch (Exception ex) {
-            logger.info("Log error: " + ex.getMessage());
-        }
-        return "curvePoint/add";
-    }
+		model.addAttribute("curvePoints", curvePointService.findAll());
+		logger.info("Show CurvePoint List ");
+		return "curvePoint/list";
+	}
 
-    @PostMapping("/curvePoint/validate")
-    public String validate(@Valid CurvePoint curvePoint, BindingResult result, Model model) {
-        try {
-            //validate
-            validator.validate(curvePoint, result);
+	@GetMapping("/curvePoint/add")
+	public String addBidForm(CurvePoint bid) {
 
-            if (!result.hasErrors()) {
-                //checkData
-                curvePointService.save(curvePoint);
-                model.addAttribute("curvePoints", curvePointService.findAll());
-                return "redirect:/curvePoint/list";
-            }
-            return "curvePoint/add";
-        } catch (Exception ex) {
-            logger.info("Log error: " + ex.getMessage());
-        }
-        return "curvePoint/add";
-    }
+		logger.info("Show form to add Curve Point ");
+		return "curvePoint/add";
+	}
 
-    @GetMapping("/curvePoint/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        try {
-            CurvePoint curvePoint = curvePointService.findById(id);
-            model.addAttribute("curvePoint", curvePoint);
-            return "curvePoint/update";
-        } catch (Exception ex) {
-            logger.info("Log error: " + ex.getMessage());
-        }
-        return "curvePoint/update";
-    }
+	@PostMapping("/curvePoint/validate")
+	public String validate(@Valid CurvePoint curvePoint, BindingResult result, Model model) {
+		//validate
+		validator.validate(curvePoint, result);
 
-    @PostMapping("/curvePoint/update/{id}")
-    public String updateBid(@PathVariable("id") Integer id, @Valid CurvePoint curvePoint,
-                            BindingResult result, Model model) {
-        try {
-            //validate
-            validator.validate(curvePoint, result);
+		if(!result.hasErrors())
+		{
+			//checkData
+			curvePointService.save(curvePoint);
+			model.addAttribute("curvePoints", curvePointService.findAll());
+			logger.info("Add new curvePoint successfully ! ");
+			return "redirect:/curvePoint/list";
+		}
+		else
+		{
+			logger.error("CurvePoint has not been saved, please check again !");
+			return "curvePoint/add";
+		}
+	}
 
-            if (result.hasErrors()) {
-                return "curvePoint/update";
-            }
-            curvePoint.setId(id);
-            curvePointService.save(curvePoint);
-            model.addAttribute("curvePoints", curvePointService.findAll());
-            return "redirect:/curvePoint/list";
-        } catch (Exception ex) {
-            logger.info("Log error: " + ex.getMessage());
-        }
-        return "redirect:/curvePoint/list";
-    }
+	@GetMapping("/curvePoint/update/{id}")
+	public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
 
-    @GetMapping("/curvePoint/delete/{id}")
-    public String deleteBid(@PathVariable("id") Integer id, Model model) {
-        try {
-            CurvePoint curvePoint = curvePointService.findById(id);
-            curvePointService.delete(curvePoint);
-            model.addAttribute("curvePoints", curvePointService.findAll());
-            return "redirect:/curvePoint/list";
-        } catch (Exception ex) {
-            logger.info("Log error: " + ex.getMessage());
-        }
-        return "redirect:/curvePoint/list";
-    }
+		CurvePoint curvePoint = curvePointService.findById(id);
+		model.addAttribute("curvePoint", curvePoint);
+		logger.info("Log error: ");
+		return "curvePoint/update";
+	}
+
+	@PostMapping("/curvePoint/update/{id}")
+	public String updateBid(@PathVariable("id") Integer id, @Valid CurvePoint curvePoint,
+	                        BindingResult result, Model model) {
+		//validate
+		validator.validate(curvePoint, result);
+
+		if(!result.hasErrors())
+		{
+			curvePoint.setId(id);
+			curvePointService.save(curvePoint);
+			model.addAttribute("curvePoints", curvePointService.findAll());
+			logger.info("Update curve point successfully !");
+			return "redirect:/curvePoint/list";
+		}
+		else
+		{
+			logger.error(" Error update curve point");
+			return "curvePoint/update";
+		}
+	}
+
+	@GetMapping("/curvePoint/delete/{id}")
+	public String deleteBid(@PathVariable("id") Integer id, Model model) {
+
+		CurvePoint curvePoint = curvePointService.findById(id);
+		curvePointService.delete(curvePoint);
+		model.addAttribute("curvePoints", curvePointService.findAll());
+		logger.info("Delete curvePoint successfully !");
+		return "redirect:/curvePoint/list";
+	}
 }

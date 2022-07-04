@@ -1,12 +1,12 @@
 package com.nnk.springboot.validator;
 
 import com.nnk.springboot.domain.Trade;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import java.util.regex.Pattern;
-
 
 @Component
 public class TradeValidator implements Validator {
@@ -19,20 +19,16 @@ public class TradeValidator implements Validator {
 	public void validate(Object target, Errors errors) {
 		Trade trade = (Trade) target;
 
-		if (trade.getAccount() == null || trade.getAccount().length() <= 0) {
+		if (Strings.isBlank(trade.getAccount()))  {
 			errors.rejectValue("account", "trade.account.invalid.blank");
 		}
-		if (trade.getType() == null || trade.getType().length() <= 0) {
+		if (Strings.isBlank(trade.getType())) {
 			errors.rejectValue("type", "trade.type.invalid.blank");
 		}
-
 		if (trade.getBuyQuantity() == null) {
 			errors.rejectValue("buyQuantity", "trade.buyQuantity.invalid.blank");
-		}
-
-		if (trade.getBuyQuantity() != null && !Pattern.compile("[0-9]").matcher(trade.getBuyQuantity().toString()).find()) {
+		} else if(!Pattern.compile("\\d+").matcher(trade.getBuyQuantity().toString()).find()) {
 			errors.rejectValue("buyQuantity", "trade.buyQuantity.invalid.number");
 		}
-
 	}
 }

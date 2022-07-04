@@ -1,11 +1,9 @@
 package com.nnk.springboot.controller;
 
 import com.nnk.springboot.config.UserDetailsServiceImpl;
-import com.nnk.springboot.controllers.BidListController;
 import com.nnk.springboot.controllers.CurveController;
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.services.CurvePointService;
-import com.nnk.springboot.validator.BidListValidator;
 import com.nnk.springboot.validator.CurvePointValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +27,6 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 
 @WebMvcTest(CurveController.class)
 @ExtendWith(SpringExtension.class)

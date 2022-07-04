@@ -1,15 +1,19 @@
 package com.nnk.springboot.domain;
 
+import lombok.Data;
+import lombok.Generated;
+import lombok.NoArgsConstructor;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import java.io.Serializable;
 
 @Entity
+@Data
+@NoArgsConstructor
+@Generated
 @Table(name = "users")
-public class User implements Serializable {
+public class User {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
@@ -17,7 +21,7 @@ public class User implements Serializable {
     @NotBlank(message = "Username is mandatory")
     private String username;
 
-    @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", message = "Password is not valid")
+    //@Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", message = "Password is not valid")
     @NonNull
     @NotBlank(message = "Password is mandatory")
     private String password;
@@ -27,17 +31,6 @@ public class User implements Serializable {
 
     @NotBlank(message = "Role is mandatory")
     private String role;
-
-    @Enumerated(EnumType.STRING)
-    private Provider provider;
-
-    public Provider getProvider() {
-        return provider;
-    }
-
-    public void setProvider(Provider provider) {
-        this.provider = provider;
-    }
 
     public Integer getId() {
         return id;
@@ -79,6 +72,11 @@ public class User implements Serializable {
         this.role = role;
     }
 
-    public void setEnabled(boolean b) {
+    public User(int id, String fullname, String username, String password, String role) {
+        this.id = id;
+        this.fullname= fullname;
+        this.username = username;
+        this.password = password;
+        this.role = role;
     }
 }

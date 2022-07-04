@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BidListService {
@@ -20,8 +19,6 @@ public class BidListService {
 	}
 
 	public BidList findById(int id) {
-		//Optional<BidList> optional = bidListRepository.findById(id);
-		//return optional.isEmpty() ? null : optional.get();
 		return bidListRepository.findById(id).orElseThrow(()-> new ObjectNotFoundException("BidList", "id"));
 	}
 

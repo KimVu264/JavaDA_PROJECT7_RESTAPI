@@ -37,11 +37,8 @@ public class CurvePointValidator implements Validator {
 
 		if (curvePoint.getValue() == null) {
 			errors.rejectValue("value", "curvePoint.value.invalid.blank");
-		}
-
-		if (curvePoint.getValue() != null && !Pattern.compile("[0-9]").matcher(curvePoint.getValue().toString()).find()) {
+		} else if(!Pattern.compile("\\d+").matcher(curvePoint.getValue().toString()).find()) {
 			errors.rejectValue("value", "curvePoint.value.invalid.number");
 		}
-
 	}
 }

@@ -6,8 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.annotation.security.RolesAllowed;
-
 @Controller
 public class HomeController
 {
@@ -15,22 +13,13 @@ public class HomeController
 
 	@RequestMapping("/")
 	public String home(Model model) {
-		try {
-			return "homePage";
-		} catch (Exception ex) {
-			logger.info("Log error: " + ex.getMessage());
-		}
-
+		logger.info("Get homePage");
 		return "homePage";
 	}
 
 	@RequestMapping("/home")
 	public String adminHome(Model model) {
-		try {
-			return "redirect:/bidList/list";
-		} catch (Exception ex) {
-			logger.info("Log error: " + ex.getMessage());
-		}
+		logger.info("Access home admin");
 		return "redirect:/bidList/list";
 	}
 

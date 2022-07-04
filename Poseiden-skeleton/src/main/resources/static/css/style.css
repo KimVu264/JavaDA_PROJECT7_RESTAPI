@@ -7,15 +7,15 @@
     padding: 10px 0;
 
 }
-/*
-#login {
-    background-color: #1e7e34;
-    width: 200px;
-    color: #ffffff;
-    margin: 30px auto;
+
+h2 {
     text-align: center;
+    margin-bottom: 40px;
 }
-*/
+
+h6{
+    margin-bottom: 20px;
+}
 
 .errorMsg {
     text-align: center;

@@ -19,95 +19,88 @@ import javax.validation.Valid;
 @Controller
 public class RuleNameController {
 
-    private static final Logger logger = LogManager.getLogger("RuleNameController");
+	private static final Logger logger = LogManager.getLogger("RuleNameController");
 
-    @Autowired
-    RuleNameService ruleNameService;
+	@Autowired
+	RuleNameService ruleNameService;
 
-    @Autowired
-    RuleNameValidator validator;
+	@Autowired
+	RuleNameValidator validator;
 
-    @RequestMapping("/ruleName/list")
-    public String home(Model model) {
-        try {
-            model.addAttribute("ruleNames", ruleNameService.findAll());
-            return "ruleName/list";
-        } catch (Exception ex) {
-            logger.info("Log error: " + ex.getMessage());
-        }
-        return "ruleName/list";
-    }
+	@RequestMapping("/ruleName/list")
+	public String home(Model model) {
 
-    @GetMapping("/ruleName/add")
-    public String addRuleForm(RuleName bid) {
-        try {
-            return "ruleName/add";
-        } catch (Exception ex) {
-            logger.info("Log error: " + ex.getMessage());
-        }
-        return "ruleName/add";
-    }
+		model.addAttribute("ruleNames", ruleNameService.findAll());
+		logger.info("Show ruleName list");
+		return "ruleName/list";
+	}
 
-    @PostMapping("/ruleName/validate")
-    public String validate(@Valid RuleName ruleName, BindingResult result, Model model) {
-        try {
-            //validate
-            validator.validate(ruleName, result);
+	@GetMapping("/ruleName/add")
+	public String addRuleForm(RuleName bid) {
 
-            if (!result.hasErrors()) {
-                ruleNameService.save(ruleName);
-                model.addAttribute("ruleNames", ruleNameService.findAll());
-                return "redirect:/ruleName/list";
-            }
-            return "ruleName/add";
-        } catch (Exception ex) {
-            logger.info("Log error: " + ex.getMessage());
-        }
-        return "ruleName/add";
-    }
+		logger.info("Show form to add new RuleName");
+		return "ruleName/add";
+	}
 
-    @GetMapping("/ruleName/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        try {
-            RuleName ruleName = ruleNameService.findById(id);
-            model.addAttribute("ruleName", ruleName);
-            return "ruleName/update";
-        } catch (Exception ex) {
-            logger.info("Log error: " + ex.getMessage());
-        }
-        return "ruleName/update";
-    }
+	@PostMapping("/ruleName/validate")
+	public String validate(@Valid RuleName ruleName, BindingResult result, Model model) {
 
-    @PostMapping("/ruleName/update/{id}")
-    public String updateRuleName(@PathVariable("id") Integer id, @Valid RuleName ruleName,
-                                 BindingResult result, Model model) {
-        try {
-            //validate
-            validator.validate(ruleName, result);
+		//validate
+		validator.validate(ruleName, result);
 
-            if (result.hasErrors()) {
-                return "ruleName/update";
-            }
-            ruleName.setId(id);
-            ruleNameService.save(ruleName);
-            model.addAttribute("ruleNames", ruleNameService.findAll());
-            return "redirect:/ruleName/list";
-        } catch (Exception ex) {
-            logger.info("Log error: " + ex.getMessage());
-        }
-        return "redirect:/ruleName/list";
-    }
+		if(!result.hasErrors())
+		{
+			ruleNameService.save(ruleName);
+			model.addAttribute("ruleNames", ruleNameService.findAll());
+			logger.info("Add new RuleName successfully !");
+			return "redirect:/ruleName/list";
+		}
+		else
+		{
+			logger.error("Error add new ruleName");
+			return "ruleName/add";
+		}
+	}
 
-    @GetMapping("/ruleName/delete/{id}")
-    public String deleteRuleName(@PathVariable("id") Integer id, Model model) {
-        try {
-            RuleName ruleName = ruleNameService.findById(id);
-            ruleNameService.delete(ruleName);
-            model.addAttribute("ruleNames", ruleNameService.findAll());
-            return "redirect:/ruleName/list";
-        } catch (Exception ex) {
-            logger.info("Log error: " + ex.getMessage());
-        }
-        return "redirect:/ruleName/list";
-    }
+	@GetMapping("/ruleName/update/{id}")
+	public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
+
+		RuleName ruleName = ruleNameService.findById(id);
+		model.addAttribute("ruleName", ruleName);
+		logger.info("Show form to update ruleName ");
+		return "ruleName/update";
+	}
+
+	@PostMapping("/ruleName/update/{id}")
+	public String updateRuleName(@PathVariable("id") Integer id, @Valid RuleName ruleName,
+	                             BindingResult result, Model model) {
+
+		//validate
+		validator.validate(ruleName, result);
+
+		if(!result.hasErrors())
+		{
+			ruleName.setId(id);
+			ruleNameService.save(ruleName);
+			model.addAttribute("ruleNames", ruleNameService.findAll());
+			logger.info("Update ruleName successfully");
+			return "redirect:/ruleName/list";
+		}
+		else
+		{
+			logger.error("Error update ruleName ");
+			return "ruleName/update";
+		}
+
+	}
+
+	@GetMapping("/ruleName/delete/{id}")
+	public String deleteRuleName(@PathVariable("id") Integer id, Model model) {
+
+		RuleName ruleName = ruleNameService.findById(id);
+		ruleNameService.delete(ruleName);
+		model.addAttribute("ruleNames", ruleNameService.findAll());
+		logger.info("Delete ruleName successfully !");
+		return "redirect:/ruleName/list";
+	}
 }

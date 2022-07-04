@@ -1,6 +1,7 @@
 package com.nnk.springboot.validator;
 
 import com.nnk.springboot.domain.BidList;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -19,18 +20,16 @@ public class BidListValidator implements Validator {
 	public void validate(Object target, Errors errors) {
 		BidList bidList = ( BidList) target;
 
-		if (bidList.getAccount() == null || bidList.getAccount().length() <= 0) {
+		if (Strings.isBlank(bidList.getAccount())) {
 			errors.rejectValue("account", "bidList.account.invalid.blank");
 		}
-		if (bidList.getType() == null || bidList.getType().length() <= 0) {
+		if (Strings.isBlank(bidList.getType())) {
 			errors.rejectValue("type", "bidList.type.invalid.blank");
 		}
 
 		if (bidList.getBidQuantity() == null) {
 			errors.rejectValue("bidQuantity", "bidList.bidQuantity.invalid.blank");
-		}
-
-		if (bidList.getBidQuantity() != null && !Pattern.compile("[0-9]").matcher(bidList.getBidQuantity().toString()).find()) {
+		} else if(!Pattern.compile("\\d+").matcher(bidList.getBidQuantity().toString()).find()) {
 			errors.rejectValue("bidQuantity", "bidList.bidQuantity.invalid.number");
 		}
 	}

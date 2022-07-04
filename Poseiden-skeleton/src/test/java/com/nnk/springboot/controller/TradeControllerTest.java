@@ -2,12 +2,9 @@ package com.nnk.springboot.controller;
 
 
 import com.nnk.springboot.config.UserDetailsServiceImpl;
-import com.nnk.springboot.controllers.BidListController;
 import com.nnk.springboot.controllers.TradeController;
 import com.nnk.springboot.domain.Trade;
-import com.nnk.springboot.services.BidListService;
 import com.nnk.springboot.services.TradeService;
-import com.nnk.springboot.validator.BidListValidator;
 import com.nnk.springboot.validator.TradeValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +28,6 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 
 @WebMvcTest(TradeController.class)
 @ExtendWith(SpringExtension.class)

@@ -1,12 +1,13 @@
 package com.nnk.springboot;
 
+import lombok.Generated;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @SpringBootApplication
-@EntityScan
 public class Application {
+
+	@Generated
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}

@@ -4,7 +4,8 @@
 <head>
     <meta charset="utf-8"/>
     <title>Login</title>
-    <link rel="stylesheet" href="../../css/bootstrap.min.css" >
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
 </head>
 <body>
 <div class="container">
@@ -14,7 +15,7 @@
     </div>
 
     <form class="form-signin" method='POST' th:action="@{/login}">
-        <h2>Login with Username and Password </h2>
+        <h6>Login with Username and Password </h6>
 
         <p class="errorMsg" th:if="${param.error}">Invalid username or password</p>
         <p class="errorMsg" th:if="${param.logout}">You have been logged out.</p>
@@ -33,9 +34,8 @@
         <br><br>
         <a class="btn btn-primary form-control" href="/signup">Signup</a>
         <br><br>
-        <a class="btn btn-primary form-control" th:href="@{/oauth2/authorization/google}">Login with Google</a>
+        <a class="btn btn-primary form-control" th:href="@{/oauth2/authorization/github}">Login with Github</a>
     </form>
-
     </div>
 
 </div>

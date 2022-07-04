@@ -3,23 +3,23 @@ package com.nnk.springboot.integration;
 import com.nnk.springboot.controllers.BidListController;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.repositories.BidListRepository;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
+@WithMockUser("kim")
 public class BidTests {
 
 	@Autowired
@@ -29,7 +29,7 @@ public class BidTests {
 	BidListController bidListController;
 
 	BidList bid;
-	BidList bidToTest;
+	BidList bidTest;
 
 	@BeforeEach
 	void setupTest()
@@ -38,6 +38,7 @@ public class BidTests {
 		bid.setAccount("Account Test");
 		bid.setType("Type Test");
 		bid.setBidQuantity(10d);
+
 	}
 
 	@Test
@@ -47,14 +48,14 @@ public class BidTests {
 		String addBidForm = bidListController.addBidForm(bid);
 		List<BidList> bidListTest = bidListRepository.findAll();
 
-		bidToTest = bidListTest.get(0);
+		bidTest = bidListTest.get(0);
 
 		assertEquals("bidList/add", addBidForm);
 		assertNotNull(bidListTest);
 		assertEquals(1, bidListTest.size());
-		assertEquals("Account Test", bidToTest.getAccount());
-		assertEquals("Type Test", bidToTest.getType());
-		assertEquals(20d, bidToTest.getBidQuantity());
+		assertEquals("Account Test", bidTest.getAccount());
+		assertEquals("Type Test", bidTest.getType());
+		assertEquals(20d, bidTest.getBidQuantity());
 	}
 
 	@Test
@@ -62,9 +63,9 @@ public class BidTests {
 	{
 		// Update
 		bid.setBidQuantity(20d);
-		bidToTest = bidListRepository.save(bid);
+		bidTest = bidListRepository.save(bid);
 
-		assertEquals(20, bidToTest.getBidQuantity());
+		assertEquals(20, bidTest.getBidQuantity());
 	}
 
 	@Test
@@ -81,9 +82,9 @@ public class BidTests {
 	{
 		// Delete
 		List<BidList> bidListTest = bidListRepository.findAll();
-		bidToTest = bidListTest.get(0);
+		bidTest = bidListTest.get(0);
 
-		bidListRepository.delete(bidToTest);
+		bidListRepository.delete(bidTest);
 		List<BidList> testResult = bidListRepository.findAll();
 
 		assertEquals(0, testResult.size());

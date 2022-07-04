@@ -2,8 +2,10 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.services.UserService;
+import com.nnk.springboot.validator.UserValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,7 +19,11 @@ public class SignupController {
 
 	private static final Logger logger = LogManager.getLogger("SignupController");
 
-	private final UserService userService;
+	@Autowired
+	UserService userService;
+
+	@Autowired
+	UserValidator validator;
 
 	public SignupController(UserService userService) {
 		this.userService = userService;
@@ -32,24 +38,23 @@ public class SignupController {
 
 	@PostMapping(value = "/signup")
 	public String signUp(@Valid User user, BindingResult result, Model model) {
-		if(result.hasErrors())
+		try
 		{
-			return "signup";
-		}
-		if(!userService.isExistUserByUsername(user))
-		{
-			if(userService.isValidPassword(user.getPassword()))
+			//validate
+			user.setRole("USER");
+			validator.validate(user, result);
+
+			if(result.hasErrors())
 			{
-				userService.createUser(user);
-				return "redirect:/login";
+				return "signup";
 			}
-			else {
-				model.addAttribute("error", "Password is not valid");
-			}
-		} else {
-			model.addAttribute("error", "Username is already existed");
-			return "signup";
+			userService.createUser(user);
+			return "redirect:/login";
 		}
-		return "signup";
+		catch(Exception ex)
+		{
+			logger.error("Log error: " + ex.getMessage());
+		}
+		return "login";
 	}
 }

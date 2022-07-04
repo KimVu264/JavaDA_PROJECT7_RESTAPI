@@ -1,8 +1,8 @@
 package com.nnk.springboot.config;
 
-import com.nnk.springboot.domain.Provider;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.repositories.UserRepository;
+import lombok.Generated;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,6 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	}
 
 	@Override
+	@Generated
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User appUser = this.userRepository.findByUsername(username);
 
@@ -41,18 +42,4 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 				Collections.singletonList(new SimpleGrantedAuthority(appUser.getRole())));
 	}
 
-	public void processOAuthPostLogin(String username) {
-		User existUser = userRepository.findByUsername(username);
-
-		if (existUser == null) {
-			User newUser = new User();
-			newUser.setUsername(username);
-			newUser.setProvider(Provider.GOOGLE);
-			newUser.setRole("USER");
-			//newUser.setEnabled(true);
-
-			userRepository.save(newUser);
-		}
-
-	}
 }

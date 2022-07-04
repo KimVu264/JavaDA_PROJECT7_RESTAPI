@@ -1,19 +1,16 @@
 package com.nnk.springboot.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.Generated;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.sql.Timestamp;
 
 @Entity
-@Setter
-@Getter
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
+@Generated
 @Table(name = "rule_name")
 public class RuleName {
 
@@ -37,6 +34,13 @@ public class RuleName {
 	@Column(name = "sql_part")
 	private String sqlPart;
 
-	public RuleName(String rule_name, String description, String json, String template, String sql, String sql_part) {
+	public RuleName(String name, String description, String json, String template, String sqlStr, String sqlPart)
+	{
+		this.name = name;
+		this.description = description;
+		this.json = json;
+		this.template =template;
+		this.sqlStr = sqlStr;
+		this.sqlPart = sqlPart;
 	}
 }

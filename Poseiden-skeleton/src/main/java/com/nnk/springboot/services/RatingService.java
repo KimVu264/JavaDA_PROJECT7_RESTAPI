@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class RatingService {
@@ -20,8 +19,6 @@ public class RatingService {
 	}
 
 	public Rating findById(int id) {
-		//Optional<Rating> optional = repository.findById(id);
-		//return optional.isEmpty() ? null : optional.get();
 		return ratingRepository.findById(id).orElseThrow(()-> new ObjectNotFoundException("Rating", "id"));
 	}
 

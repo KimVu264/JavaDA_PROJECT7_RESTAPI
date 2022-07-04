@@ -1,12 +1,9 @@
 package com.nnk.springboot.controller;
 
 import com.nnk.springboot.config.UserDetailsServiceImpl;
-import com.nnk.springboot.controllers.BidListController;
 import com.nnk.springboot.controllers.RatingController;
 import com.nnk.springboot.domain.Rating;
-import com.nnk.springboot.services.BidListService;
 import com.nnk.springboot.services.RatingService;
-import com.nnk.springboot.validator.BidListValidator;
 import com.nnk.springboot.validator.RatingValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +27,6 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 
 @WebMvcTest(RatingController.class)
 @ExtendWith(SpringExtension.class)
@@ -54,9 +50,9 @@ public class RatingControllerTest {
 	@BeforeEach
 	void setupTest()
 	{
-		rating = new Rating("MoodyTest","sandPTest","fitchRatingTest", 10);
-		findAll = new ArrayList<>(Arrays.asList(new Rating("MoodyTest","sandPTest","fitchRatingTest", 10),
-				new Rating("Moody2Test","sandP2Test","fitchRating2Test",11)));
+		rating = new Rating("MoodyTest","sandPTest","fitchRatingTest", 10d);
+		findAll = new ArrayList<>(Arrays.asList(new Rating("MoodyTest","sandPTest","fitchRatingTest", 10d),
+				new Rating("Moody2Test","sandP2Test","fitchRating2Test",11d)));
 	}
 
 	@Test

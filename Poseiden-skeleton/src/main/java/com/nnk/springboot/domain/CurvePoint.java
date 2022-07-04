@@ -1,21 +1,17 @@
 package com.nnk.springboot.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.Generated;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 @Entity
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
+@Generated
 @Table(name = "curve_point")
 public class CurvePoint {
     @Id
@@ -36,6 +32,12 @@ public class CurvePoint {
 	@Column(name = "creation_date", nullable = false, updatable = false)
 	private Timestamp creationDate;
 
-	public CurvePoint(int i, double v, double v1) {
+	public CurvePoint(Integer curveId, Double term, Double value)
+	{
+		this.curveId = curveId;
+		this.term = term;
+		this.value = value;
 	}
+
+
 }

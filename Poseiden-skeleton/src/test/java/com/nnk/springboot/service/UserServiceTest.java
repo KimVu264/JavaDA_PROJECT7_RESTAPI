@@ -11,8 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class UserServiceTest {
@@ -23,67 +28,60 @@ public class UserServiceTest {
 	@Autowired
 	UserService userService;
 
-	User userTest;
+	User user;
+
+	@BeforeEach
+	void setupTest()
+	{
+		user = new User(1, "Kim VU", "kim","Kimkim123@", "ADMIN");
+	}
 
 	@Test
 	void findByUsernameTest()
 	{
 		String username = "kim";
-		Mockito.when(userRepository.findByUsername(username)).thenReturn(userTest);
 
-		assertEquals(userTest,userService.getUserByUsername(username));
+		Mockito.when(userRepository.findByUsername(username)).thenReturn(user);
+
+		assertEquals(user,userService.findByUsername(username));
 	}
 
 	@Test
-	void passwordValidatorFalseTest()
-	{
-		String password = "No valid";
-		Boolean expected = false;
-		Boolean result ;
-		result = userService.isValidPassword(password);
-
-		assertEquals(false, result);
+	void saveUserTest() {
+		when(userRepository.save(user)).thenReturn(user);
+		assertEquals(user, userService.save(user));
 	}
 
 	@Test
-	void passwordValidatorTrueTest()
+	void findByIdTest()
 	{
-		String password = "Test-12345";
-		Boolean expected = true;
-		Boolean result ;
-		result = userService.isValidPassword(password);
-
-		assertEquals(true, result);
+		Mockito.when(userRepository.findById(1)).thenReturn(java.util.Optional.ofNullable(user));
+		assertThat(userService.findById(1)).isEqualTo(user);
 	}
 
 	@Test
-	void userValidatorTrueTest()
+	void findAllTest()
 	{
-		String username = "kim";
-		boolean result;
-		result = userService.isExistUserByUsername(userTest);
-
-		assertEquals(true, result);
+		List<User> users = userService.findAll();
+		Mockito.when(userRepository.findAll()).thenReturn(users);
+		assertNotNull(users);
+		assertEquals(0, users.size());
 	}
 
 	@Test
-	void userValidatorFalseTest()
-	{
-		String username ="kim";
-		String expected = "Username already used!";
-		boolean result;
-		Mockito.when(userRepository.findByUsername(username)).thenReturn(userTest);
-		result = userService.isExistUserByUsername(userTest);
+	public void deleteUserTest() {
+		userService.delete(user);
 
-		assertEquals(expected, result);
+		Mockito.verify(userRepository, Mockito.times(1))
+				.delete(user);
 	}
 
 	@Test
-	void addTest()
+	void createUserTest()
 	{
-		Mockito.when(userRepository.save(userTest)).thenReturn(userTest);
-		userService.createUser(userTest);
+		Mockito.when(userRepository.save(user)).thenReturn(user);
+		userService.createUser(user);
 
-		verify(userRepository,Mockito.times(1)).save(userTest);
+		verify(userRepository,Mockito.times(1)).save(user);
 	}
 }

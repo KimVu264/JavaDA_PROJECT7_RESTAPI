@@ -31,7 +31,7 @@ public class RatingServiceTest {
 	@BeforeEach
 	void setUp()
 	{
-		rating = new Rating("moodysRatingTest","SandPRatingTEst","fitchRatingTest",10);
+		rating = new Rating("moodysRatingTest","SandPRatingTEst","fitchRatingTest",10d);
 	}
 
 	@Test

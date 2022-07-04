@@ -1,22 +1,19 @@
 package com.nnk.springboot.domain;
 
-import lombok.*;
+import lombok.Data;
+import lombok.Generated;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
-import java.sql.Date;
 import java.sql.Timestamp;
 
 @Entity
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
-@Builder
+@Generated
 @Table(name = "bid_list")
 public class BidList {
 
@@ -24,7 +21,6 @@ public class BidList {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer bidListId;
 
-	@NonNull
 	@NotBlank(message = "Account is mandatory")
 	private String account;
 
@@ -81,6 +77,14 @@ public class BidList {
 
 	private String side;
 
-	public BidList(String account_test, String type_test, double v) {
+	public BidList( String account, String type, Double bidQuantity) {
+		this.account = account;
+		this.type = type;
+		this.bidQuantity = bidQuantity;
 	}
+
+	public BidList(double bidQuantity) {
+		this.bidQuantity = bidQuantity;
+	}
+
 }

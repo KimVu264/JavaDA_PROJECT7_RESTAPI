@@ -1,9 +1,7 @@
 package com.nnk.springboot.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
+import lombok.Generated;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -11,10 +9,8 @@ import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 
 @Entity
-@Setter
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
+@Generated
 @Table(name = "trade")
 public class Trade {
 
@@ -79,9 +75,17 @@ public class Trade {
 
 	private String side;
 
-	public Trade(String trade_account, String type, double v) {
+	public Trade(String account, String type, double buyQuantity) {
+		this.account = account;
+		this.type = type;
+		this.buyQuantity = buyQuantity;
 	}
 
-	public Trade(String trade_account, String type) {
+	public Trade() {
+
+	}
+
+	public Trade(double buyQuantity) {
+		this.buyQuantity = buyQuantity;
 	}
 }
