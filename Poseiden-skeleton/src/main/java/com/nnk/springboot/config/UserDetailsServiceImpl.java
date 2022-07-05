@@ -42,4 +42,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 				Collections.singletonList(new SimpleGrantedAuthority(appUser.getRole())));
 	}
 
+	public void processOAuthPostLogin(String username) {
+		User existUser = userRepository.findByUsername(username);
+
+		if (existUser == null) {
+			User newUser = new User();
+			newUser.setUsername(username);
+			newUser.setRole("USER");
+			//newUser.setProvider(Provider.GOOGLE);
+			userRepository.save(newUser);
+		}
+	}
 }

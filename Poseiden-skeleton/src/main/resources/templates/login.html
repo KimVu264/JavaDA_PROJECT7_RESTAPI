@@ -11,10 +11,14 @@
 <div class="container">
 
     <div class="row">
-        <h2>POSEIDON </h2>
+        <h2>POSEIDON INC </h2>
     </div>
 
     <form class="form-signin" method='POST' th:action="@{/login}">
+        <div th:if="${success}" th:class="${alert}" >
+            <div class="alert alert-success"> <b> Sign up successfully! </b></div>
+        </div>
+
         <h6>Login with Username and Password </h6>
 
         <p class="errorMsg" th:if="${param.error}">Invalid username or password</p>
@@ -33,6 +37,8 @@
         <button class="btn btn-primary form-control" type="submit">Log in</button>
         <br><br>
         <a class="btn btn-primary form-control" href="/signup">Signup</a>
+        <br><br>
+        <a class="btn btn-primary form-control" th:href="@{/oauth2/authorization/google}">Login with Google</a>
         <br><br>
         <a class="btn btn-primary form-control" th:href="@{/oauth2/authorization/github}">Login with Github</a>
     </form>

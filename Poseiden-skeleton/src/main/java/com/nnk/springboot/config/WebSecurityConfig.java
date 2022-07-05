@@ -8,11 +8,13 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 
 @EnableWebSecurity
@@ -22,34 +24,31 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	UserDetailsServiceImpl userDetailService;
 
-	private CustomOAuth2UserService oAuth2UserService  = new CustomOAuth2UserService();
+	private CustomOAuth2UserService oAuth2UserService = new CustomOAuth2UserService();
 
 	@Bean
-	public PasswordEncoder passwordEncoder()
-	{
+	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
 	//Config authentication
 
 	@Override
-	protected void configure(@NotNull AuthenticationManagerBuilder auth) throws Exception
-	{
+	protected void configure(@NotNull AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailService).passwordEncoder(passwordEncoder());
 	}
 
-	 //Config permissions
+	//Config permissions
 
 	@Override
-	public void configure(@NotNull HttpSecurity http) throws Exception
-	{
-		http.csrf().disable()
-				.authorizeRequests().antMatchers("/login**","/signup**", "/css/**")
-				.permitAll()
-				.antMatchers("/user/*").hasAuthority("ADMIN")
+	public void configure(@NotNull HttpSecurity http) throws Exception {
+		http.authorizeRequests()
+				.antMatchers("/login**", "/signup**", "/css/**").permitAll()
+				.antMatchers("/user/**").hasAnyAuthority("ADMIN")
 				.anyRequest().authenticated()
-				.and()
-				.formLogin().loginPage("/login").permitAll()
+				.and().formLogin().loginPage("/login").permitAll()
+				.defaultSuccessUrl("/",true).permitAll()
+				.and().exceptionHandling().accessDeniedPage("/error/403")
 				.and()
 				.logout()
 				.invalidateHttpSession(true).clearAuthentication(true)
@@ -61,5 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.loginPage("/login")
 				.userInfoEndpoint()
 				.userService(oAuth2UserService);
+
 	}
+
 }

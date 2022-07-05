@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -28,6 +29,7 @@ public class UserController {
 	@Autowired
 	private UserValidator validator;
 
+	@RolesAllowed("ADMIN")
 	@GetMapping("/user/list")
 	public String home(@NotNull Model model) {
 		model.addAttribute("users", userService.findAll());

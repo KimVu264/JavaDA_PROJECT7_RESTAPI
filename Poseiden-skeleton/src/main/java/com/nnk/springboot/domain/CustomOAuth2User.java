@@ -2,9 +2,11 @@ package com.nnk.springboot.domain;
 
 import lombok.Generated;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 @Generated
@@ -33,6 +35,11 @@ public class CustomOAuth2User implements OAuth2User {
 	public String getName()
 	{
 		return oAuth2User.getAttribute("name");
+	}
+
+	public String getEmail()
+	{
+		return oAuth2User.getAttribute("email");
 	}
 
 }

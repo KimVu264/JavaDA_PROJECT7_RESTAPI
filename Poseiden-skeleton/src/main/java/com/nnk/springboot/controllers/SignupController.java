@@ -43,12 +43,12 @@ public class SignupController {
 			//validate
 			user.setRole("USER");
 			validator.validate(user, result);
-
 			if(result.hasErrors())
 			{
 				return "signup";
 			}
 			userService.createUser(user);
+			model.addAttribute("success", "Singup successfully !");
 			return "redirect:/login";
 		}
 		catch(Exception ex)
