@@ -69,29 +69,4 @@ public class SignupControllerTest {
 				.andReturn();
 	}
 
-	@Test
-	void postSignUpWhenReturnError() throws Exception
-	{
-		mockMvc.perform(post("/signup")
-						.param("model", "user"))
-				.andExpect(status().isFound())
-				.andExpect(flash().attributeCount(1))
-				.andExpect(model().attributeHasErrors())
-				.andExpect(redirectedUrl("/signup"))
-				.andReturn();
-	}
-
-	@Test
-	void postSignUpWhenReturnErrorWrongPasswordFormat() throws Exception
-	{
-		//Mockito.when(validator.validate()).thenReturn(userSetup);
-
-		Mockito.when(userService.createUser(userSetup)).thenReturn(userSetup);
-
-		mockMvc.perform(post("/signup"))
-				.andExpect(flash().attributeCount(1))
-				.andExpect(model().attributeHasErrors())
-				.andExpect(status().isOk())
-				.andReturn();
-	}
 }

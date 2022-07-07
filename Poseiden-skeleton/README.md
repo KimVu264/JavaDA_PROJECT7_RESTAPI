@@ -1,6 +1,12 @@
 # Project: POSEIDON INC
 ![img_1.png](img_1.png)
+This app uses Java to run and stores the data in Mysql DB.
+
 # Getting Started
+
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
+See deployment for notes on how to deploy the project on a live system.
+
 ## Technical used:
 
 1. Framework: Spring Boot v2.6.4
@@ -15,6 +21,7 @@
 10. Mockito
 
 ## Setup with Intellij IDE
+
 1. Create project from Initializr: File > New > project > Spring Initializr
 2. Add lib repository into pom.xml
 3. Add folders
@@ -27,26 +34,30 @@
 ## Installation
 
 Before you continue, ensure you meet the following requirements:
+1.Install Java:
+https://docs.oracle.com/javase/8/docs/technotes/guides/install/install_overview.html
 
-1. Java: https://docs.oracle.com/javase/8/docs/technotes/guides/install/install_overview.html
-2. MySql: https://www.mysql.com/downloads/
+2. Install MySql:
+https://www.mysql.com/downloads/
+
 After downloading and installing it, 
-3. Run: ``` git clone https://github.com/OpenClassrooms-Student-Center/JavaDA_PROJECT7_RESTAPI.git ```
+
+3. Run: 
+``` git clone https://github.com/OpenClassrooms-Student-Center/JavaDA_PROJECT7_RESTAPI.git ```
+
 4. In file application.properties, input your username and password of MySQL: 
    ```sh
    spring.datasource.username= 
    spring.datasource.password= 
    ```
- 
-## Implement a Feature
-1. Create mapping domain class and place in package com.nnk.springboot.domain
-2. Create repository class and place in package com.nnk.springboot.repositories
-3. Create controller class and place in package com.nnk.springboot.controllers
-4. Create view files and place in src/main/resource/templates
+   
+## Testing
 
-## Write Unit Test
-1. Create unit test and place in package com.nnk.springboot in folder test > java
+The app has unit tests and integration tests written.
+The existing tests need to be triggered from maven-surefire plugin while we try to generate the final executable jar file.
+To run the tests from maven, go to the folder that contains the pom.xml file and execute the below command.
 
-## Security
-1. Create user service to load user from  database and place in package com.nnk.springboot.services
-2. Add configuration class and place in package com.nnk.springboot.config
+* To run test, use command:
+``` mvn surefire-report:report ```
+
+Access file directory : target/site/jacoco and run the file index.html in your web browser to see the packages tested and their percentage.
