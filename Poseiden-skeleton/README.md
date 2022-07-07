@@ -1,8 +1,9 @@
-# Project: POSEIDON INC
+## Project: POSEIDON INC
 ![img_1.png](img_1.png)
+
 This app uses Java to run and stores the data in Mysql DB.
 
-# Getting Started
+## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
 See deployment for notes on how to deploy the project on a live system.
@@ -34,15 +35,19 @@ See deployment for notes on how to deploy the project on a live system.
 ## Installation
 
 Before you continue, ensure you meet the following requirements:
+
 1.Install Java:
+
 https://docs.oracle.com/javase/8/docs/technotes/guides/install/install_overview.html
 
 2. Install MySql:
+
 https://www.mysql.com/downloads/
 
 After downloading and installing it, 
 
 3. Run: 
+
 ``` git clone https://github.com/OpenClassrooms-Student-Center/JavaDA_PROJECT7_RESTAPI.git ```
 
 4. In file application.properties, input your username and password of MySQL: 
