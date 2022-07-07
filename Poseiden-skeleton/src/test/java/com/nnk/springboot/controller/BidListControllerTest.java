@@ -63,8 +63,9 @@ public class BidListControllerTest {
 
 		mockMvc.perform(post("/bidList/validate")
 						.contentType(MediaType.APPLICATION_FORM_URLENCODED)
-						.content(String.valueOf(bidList)))
-				.andExpect(redirectedUrl("/bidList/list"));
+						.content(String.valueOf(bidList))
+						.with(csrf()))
+						.andExpect(redirectedUrl("/bidList/list"));
 	}
 
 	@Test

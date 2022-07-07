@@ -12,7 +12,6 @@ import java.sql.Timestamp;
 
 @Entity
 @Data
-@NoArgsConstructor
 @Generated
 @Table(name = "bid_list")
 public class BidList {
@@ -27,7 +26,7 @@ public class BidList {
 	@NotBlank(message = "Type is mandatory")
 	private String type;
 
-	@Positive(message = "Bid Quantity must be greater than zero")
+	@NotBlank(message = "Bid quantity is mandatory")
 	@Column(name = "bid_quantity")
 	private Double bidQuantity;
 
@@ -87,4 +86,7 @@ public class BidList {
 		this.bidQuantity = bidQuantity;
 	}
 
+	public BidList() {
+
+	}
 }

@@ -1,6 +1,5 @@
 package com.nnk.springboot.controller;
 
-import com.nnk.springboot.config.AuthenTest;
 import com.nnk.springboot.config.UserDetailsServiceImpl;
 import com.nnk.springboot.controllers.HomeController;
 import org.junit.jupiter.api.Test;
@@ -12,6 +11,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -49,10 +49,10 @@ public class HomeControllerTest {
 	}
 
 	@Test
-	@AuthenTest.WithMockCustomUser()
+	@WithMockUser(username = "kim")
 	public void adminHomeTest() throws Exception
 	{
-		mockMvc.perform(get("/home"))
+		mockMvc.perform(get("/admin/home"))
 				.andExpect(redirectedUrl("/bidList/list"));
 	}
 }

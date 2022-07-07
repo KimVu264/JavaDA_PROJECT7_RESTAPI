@@ -2,6 +2,7 @@ package com.nnk.springboot.controller;
 
 import com.nnk.springboot.config.UserDetailsServiceImpl;
 import com.nnk.springboot.controllers.LoginController;
+import com.nnk.springboot.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class LoginControllerTest {
 
 	@MockBean
 	UserDetailsServiceImpl userDetailsService;
+
+	@MockBean
+	UserService userService;
 
 	@Autowired
 	private MockMvc mockMvc;

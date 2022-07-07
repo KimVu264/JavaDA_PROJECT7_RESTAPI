@@ -1,19 +1,15 @@
 package com.nnk.springboot.validator;
 
-import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.Trade;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
-
-import javax.validation.constraints.AssertTrue;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

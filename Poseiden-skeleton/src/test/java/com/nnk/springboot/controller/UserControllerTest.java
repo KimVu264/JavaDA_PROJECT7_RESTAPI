@@ -81,6 +81,7 @@ public class UserControllerTest {
 		mockMvc.perform(post("/user/validate")
 						.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 						.content(String.valueOf(user))
+						.with(csrf())
 						.with(user("kim")
 								.roles("ADMIN")
 								.authorities(new SimpleGrantedAuthority("ADMIN")))
@@ -88,6 +89,7 @@ public class UserControllerTest {
 						.param("password", "Test@123")
 						.param("fullname","fullNameTest")
 						.param("role","ADMIN"))
+
 						.andExpect(redirectedUrl("/user/list"));
 	}
 

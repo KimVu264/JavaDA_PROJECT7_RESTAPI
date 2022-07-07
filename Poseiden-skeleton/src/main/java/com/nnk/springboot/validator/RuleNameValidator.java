@@ -20,7 +20,6 @@ public class RuleNameValidator implements Validator {
 		if (Strings.isBlank(ruleName.getName())) {
 			errors.rejectValue("name", "ruleName.name.invalid.blank");
 		}
-
 		if (Strings.isBlank(ruleName.getDescription()))  {
 			errors.rejectValue("description", "ruleName.description.invalid.blank");
 		}

@@ -28,9 +28,11 @@ public class RuleName {
 
 	private String template;
 
+	@NotBlank(message= "sqlStr is mandatory")
 	@Column(name = "sql_str")
 	private String sqlStr;
 
+	@NotBlank(message= "sql Part is mandatory")
 	@Column(name = "sql_part")
 	private String sqlPart;
 

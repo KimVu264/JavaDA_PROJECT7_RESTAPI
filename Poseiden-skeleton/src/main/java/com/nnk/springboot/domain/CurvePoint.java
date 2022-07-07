@@ -6,11 +6,11 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 
 @Entity
 @Data
-@NoArgsConstructor
 @Generated
 @Table(name = "curve_point")
 public class CurvePoint {
@@ -19,13 +19,15 @@ public class CurvePoint {
     private Integer id;
 
 	@Column(name = "curve_id")
+	@NotBlank(message = "curveId is mandatory")
 	private Integer curveId;
 
 	@Column(name = "as_of_date")
 	private Timestamp asOfDate;
-
+	@NotBlank(message = "term is mandatory")
 	private Double term;
 
+	@NotBlank(message = "value is mandatory")
 	private Double value;
 
 	@CreationTimestamp
@@ -39,5 +41,7 @@ public class CurvePoint {
 		this.value = value;
 	}
 
+	public CurvePoint() {
 
+	}
 }

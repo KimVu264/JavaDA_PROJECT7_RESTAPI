@@ -1,12 +1,16 @@
 package com.nnk.springboot.controllers;
 
+import com.nnk.springboot.domain.User;
 import com.nnk.springboot.services.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -30,12 +34,15 @@ public class LoginController {
 	}
 
 
-	@GetMapping("secure/article-details")
-	public ModelAndView getAllUserArticles() {
-
+	@PostMapping("/logout")
+	public ModelAndView logout(Authentication authentication) {
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("users", userService.findAll());
-		mav.setViewName("user/list");
+		User userEntity = userService.findByUsername(authentication.getName());
+		if(userEntity != null)
+		{
+			SecurityContextHolder.clearContext();
+		}
+		mav.setViewName("login");
 		return mav;
 
 	}
